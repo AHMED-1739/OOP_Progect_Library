@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq.Expressions;    
+using System.Linq.Expressions;
+using System.Diagnostics.Eventing.Reader;
 
 namespace OOP_Progect_Library
 {
@@ -23,18 +24,54 @@ namespace OOP_Progect_Library
     class Library
     {
         List<Book> books=new List<Book>();
+
+        //search method
+        public Book SearchByAuther(string Auther) 
+        {
+            foreach(Book b in books)
+            {
+                if (b.Auther_ == Auther)
+                    return b;
+            }
+            return null;
+        }
+        public Book SearchByTitle(string Title)
+        {
+            foreach (Book b in books)
+            {
+                if (b.Title_ == Title)
+                    return b;
+            }
+            return null;
+        }
+        public Book Search(string Title,string Auther)
+        {
+         foreach(Book b in books)
+            {
+                if (b.Auther_ == Auther && b.Title_ == Title)
+                    return b;
+            }
+            return null;
+        }
+          //add book to the library
+        public void Add(Book book)
+        {
+            books.Add(book);
+            Console.WriteLine("The book has been added to the library.");
+        }
+        //delet book from the library
+        public void DeleteBook(string Auther,string Title)
+        {
+            foreach (Book b in books)
+                if (b.Auther_ == Auther && b.Title_ == Title)
+                {
+                    books.Remove(b); 
+                    break;
+                }
+        }
+        //show the numbers of books in this library
+        public void NumberOfBook() => Console.WriteLine("This library contains {0} book",books.Count);
         
-    
-        public void SearchByAuther(string Auther) { }
-        public void SearchByTitle(string Title) { }
-        public void Search(string Title,string Auther) { }
-
-
-
-
-
-
-
     }
     internal class Program
     {
