@@ -14,19 +14,37 @@ namespace OOP_Progect_Library
         public string Auther_ { get => Auther; }
         public string Title_ { get => Title; }
 
-        public Book(string Title,string Auther)
+        public Book(string Title, string Auther)
         {
             this.Title = Title;
             this.Auther = Auther;
         }
+    }
+    class Library
+    {
+        List<Book> books=new List<Book>();
+        
+    
+        public void SearchByAuther(string Auther) { }
+        public void SearchByTitle(string Title) { }
+        public void Search(string Title,string Auther) { }
+
+
+
+
+
+
 
     }
     internal class Program
     {
         static void Main(string[] args)
         {
-          List <Book> library=new List<Book> ();
-                
+       
+
+
+
+
 
 
 
