@@ -75,8 +75,11 @@ namespace OOP_Progect_Library
         //delet book from the library
         public void DeleteBook(string Auther,string Title)
         {
-            if (books.Count == 0) 
+            if (books.Count == 0)
+            { 
                 Console.WriteLine("the library does not contain any books to delete.");
+                return;
+            }
 
             foreach (Book book in books)
                 if (book.Auther_ == Auther && book.Title_ == Title)
@@ -92,10 +95,6 @@ namespace OOP_Progect_Library
                 if(book.Auther_ == Author)
                     books.Remove(book);
         }
-
-
-
-   
     }
     internal class Program
     {
