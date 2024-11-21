@@ -11,14 +11,15 @@ namespace OOP_Progect_Library
     class Book
     {
         private readonly string Title;
-        private readonly string Auther;
-        public string Auther_ { get => Auther; }
+        private readonly string Author;
+        public bool  IsAvailavle;
+        public string Auther_ { get => Author; }
         public string Title_ { get => Title; }
-
-        public Book(string Title, string Auther)
+        public Book(string Title, string Author)
         {
             this.Title = Title;
-            this.Auther = Auther;
+            this.Author = Author;
+            IsAvailavle = true;
         }
     }
     class Library
@@ -27,18 +28,16 @@ namespace OOP_Progect_Library
         //show the numbers of books in this library
         public void NumberOfBook() => Console.WriteLine("This library contains {0} book", books.Count);
 
-        //check if the library empty
-        public bool IsEmpty() => books.Count == 0;
 
         //search method
-        public List<Book> SearchByAuther(string Auther) 
+        public List<Book> SearchByAuther(string Author) 
         {
             List <Book> temp_books = new List<Book>();
-            if(books.Count == 0) return null;
 
-            foreach(Book b in books)
-                if (b.Auther_ == Auther)                
-                    temp_books.Add(b);
+
+            foreach(Book book in books)
+                if (book.Auther_ == Author)                
+                    temp_books.Add(book);
 
             if (temp_books.Count == 0) return null;
             else return temp_books;
@@ -46,25 +45,26 @@ namespace OOP_Progect_Library
         public List<Book> SearchByTitle(string Title)
         {
               List<Book> temp_books = new List<Book>();
-                if (books.Count == 0) return null;
-            foreach (Book b in books)
+
+            foreach (Book book in books)
             
-                if (b.Title_ == Title)
+                if (book.Title_ == Title)
                 {
-                    temp_books.Add(b);
+                    temp_books.Add(book);
                 }
                if(temp_books.Count == 0) return null;
                else return temp_books;
         }
-        public Book Search(string Title,string Auther)
-        {
-            if (books.Count == 0) return null;
-            foreach (Book b in books)
-            {
-                if (b.Auther_ == Auther && b.Title_ == Title)
-                    return b;
-            }
-            return null;
+        public List<Book> Search(string Title,string Author)
+        { 
+            List<Book> temp_books = new List<Book>();
+            
+            foreach (Book book in books)
+                if (book.Auther_ == Author && book.Title_ == Title)
+                        temp_books.Add(book);
+            if (temp_books.Count == 0)
+                return null;
+            else return temp_books;
         }
           //add book to the library
         public void Add(Book book)
@@ -76,18 +76,26 @@ namespace OOP_Progect_Library
         public void DeleteBook(string Auther,string Title)
         {
             if (books.Count == 0) 
-                Console.WriteLine("the library does not contain anny books.");
+                Console.WriteLine("the library does not contain any books to delete.");
 
-            foreach (Book b in books)
-                if (b.Auther_ == Auther && b.Title_ == Title)
+            foreach (Book book in books)
+                if (book.Auther_ == Auther && book.Title_ == Title)
                 {
-                    books.Remove(b); 
+                    books.Remove(book); 
                     break;
                 }
         }
-     
-  
-        
+        // delete all the books by a specific author
+        public void DeleteAllBookForAuther(string Author)
+        {
+            foreach(Book book in books)
+                if(book.Auther_ == Author)
+                    books.Remove(book);
+        }
+
+
+
+   
     }
     internal class Program
     {
