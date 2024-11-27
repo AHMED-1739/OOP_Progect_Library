@@ -5,19 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Diagnostics.Eventing.Reader;
-
+using System.ComponentModel;
 namespace OOP_Progect_Library
 {
     class Book
     {
         public readonly string Title;
         public readonly string Author;
+        public readonly string Subject;
         public bool  IsAvailable;
-        public Book(string Title, string Author)
+        public Book(string Title, string Author, string Subject)
         {
             this.Title = Title;
             this.Author = Author;
             IsAvailable = true;
+          this.Subject = Subject;
         }
     }
     class Library
@@ -26,8 +28,6 @@ namespace OOP_Progect_Library
         //search method
         public List<Book> SearchByAuthor(string Author)
         {
-            
-
             List<Book> temp_books = (from book in books where book.Author == Author select book).ToList();
             if (temp_books.Count == 0)
                 return null;
@@ -36,8 +36,9 @@ namespace OOP_Progect_Library
         public List<Book> SearchByTitle(string Title)
         {
             List<Book> temp_books = (from book in books where book.Title == Title select book).ToList();
-               if(temp_books.Count == 0) return null;
-               else return temp_books;
+               if(temp_books.Count == 0)
+                return null;
+                return temp_books;
         }
         public List<Book> Search(string Title,string Author)
         { 
@@ -48,7 +49,7 @@ namespace OOP_Progect_Library
                                      select book).ToList();
             if (temp_books.Count == 0)
                 return null;
-            else return temp_books;
+             return temp_books;
         }
         //We will use this method if the user doesn't know whether what they know is the title or the author's name
         public (List<Book>,List<Book>) SearchByBoth (string TitleOrAuthor)
@@ -68,17 +69,12 @@ namespace OOP_Progect_Library
             }
          return(MatchTheAuthorsName,MatchTheTitle);
         }
-          //add book to the library
-        public void Add(Book book)
-        {
-            books.Add(book);
-            Console.WriteLine("The book has been added to the library.");
-        }
+    
         //delet book from the library
-        public void DeleteBook(string Auther,string Title)
+        public void DeleteBook(string Auther, string Title)
         {
             if (books.Count == 0)
-            { 
+            {
                 Console.WriteLine("the library does not contain any books to delete.");
                 return;
             }
@@ -94,18 +90,35 @@ namespace OOP_Progect_Library
         // delete all the books by a specific author
         public void DeleteAllBookForAuther(string Author)
         {
-            foreach(Book book in books)
-                if(book.Author == Author)
+            foreach (Book book in books)
+                if (book.Author == Author)
                     books.Remove(book);
+        }
+        //Show random books to user
+        public void DisPlayRandomBook()
+        {
+            int limit;
+            if (books.Count == 0)
+            { Console.WriteLine("there is no book in this library!"); return; }
+            else if (books.Count <= 5)
+                limit = books.Count;
+            else 
+                limit = 6;
+            Random random = new Random();
+            int i = 0;
+            while (i < limit)
+            {
+                int index = random.Next(0, books.Count);
+                Console.WriteLine("Title: {0}Author: {1}", books[index].Title, books[index].Author);
+                i++;
+            }
         }
     }
     internal class Program
     {
         static void Main(string[] args)
         {
-            Library library = new Library();
 
         }
-
     }
 }
