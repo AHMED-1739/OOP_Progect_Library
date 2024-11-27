@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Diagnostics.Eventing.Reader;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using static System.Console;
 namespace OOP_Progect_Library
 {
     class Book
@@ -20,8 +21,7 @@ namespace OOP_Progect_Library
             this.Title = Title;
             this.Author = Author;
             this.Subject = Subject;
-            IsAvailable = true;
-         
+            IsAvailable = true;        
         }
     }
     class Library
@@ -69,12 +69,24 @@ namespace OOP_Progect_Library
             }
          return(MatchTheAuthorsName,MatchTheTitle);
         }
+        public void Add(Book Added_Book)
+        {
+            List<Book> temp_Books = (from book in books
+                                     where book.Author == Added_Book.Author && book.Title == Added_Book.Title
+                                     select book).ToList();
+            if (temp_Books.Count == 0)
+            {
+                books.Add(Added_Book);
+                WriteLine("The book has been added.");
+            }
+            else WriteLine("the book is already in the library.");
+        }
         //Show random books to user
         public void DisPlayRandomBook()
         {
             int limit;
             if (books.Count == 0)
-            { Console.WriteLine("there is no book in this library!"); return; }
+            { WriteLine("there is no book in this library!."); return; }
             else if (books.Count <= 5)
                 limit = books.Count;
             else 
@@ -84,7 +96,7 @@ namespace OOP_Progect_Library
             while (i < limit)
             {
                 int index = random.Next(0, books.Count);
-                Console.WriteLine("Title: {0}Author: {1}", books[index].Title, books[index].Author);
+                WriteLine("Title: {0}Author: {1}", books[index].Title, books[index].Author);
                 i++;
             }
         }
@@ -99,60 +111,57 @@ namespace OOP_Progect_Library
     {
         string[] Option;
         string Title;
-        int index;
-
+       public int index;
         public Menu(string[] Option,string Title )
         {
             this.Option = Option;
             this.Title = Title;
             index = 0; 
         }
-
         public void view()
         {
-            Console.WriteLine(Title);
+            if(index >=Option.Length)
+                index = 0;
+            WriteLine(Title+"\n");
             for(int i=0;i<Option.Length;i++)
             {
                    if(i!=index)
-                    Console.WriteLine(Option[i]);
+                    WriteLine(Option[i]);
                 else
                 {
-                    Console.BackgroundColor=ConsoleColor.Blue;
-                    Console.WriteLine(Option[i]);
-                    Console.BackgroundColor = ConsoleColor.Black;
+                    BackgroundColor=ConsoleColor.Blue;
+                    WriteLine(Option[i]);
+                    BackgroundColor = ConsoleColor.Black;
                 }
             }
-
         }
     }
     internal class Program
     {
-
-
-
-
-
-
         static void Main(string[] args)
         {
-            string[] option = {"Search" ,"Add"};
-
-
-
-            Menu mun = new Menu(option, "library");
+            string[] option = {"1-Search" ,"2-Add", "-Exit" };
+            string[] subjectOption = { "", "", "", "", "" };
+            Menu mun = new Menu(option, "-----library-----");
             ConsoleKeyInfo KeyPressed = new ConsoleKeyInfo();
- 
-            mun.view();
+
+            while (true)
+            {
+                mun.view();
+                KeyPressed=ReadKey(true);
+
+                if (KeyPressed.Key == ConsoleKey.UpArrow)
+                    mun.index++;
+                     continue;
 
 
 
-
-
-
+            }
 
 
 
 
         }
+
     }
 }
