@@ -8,6 +8,8 @@ using System.Diagnostics.Eventing.Reader;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using static System.Console;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.Win32;
 namespace OOP_Progect_Library
 {
     class Book
@@ -120,20 +122,24 @@ namespace OOP_Progect_Library
         }
         public void view()
         {
-            if(index >=Option.Length)
+            if (index >= Option.Length)
                 index = 0;
-            WriteLine(Title+"\n");
-            for(int i=0;i<Option.Length;i++)
+            WriteLine(Title + "\n");
+            for (int i = 0; i < Option.Length; i++)
             {
-                   if(i!=index)
+                if (i != index)
                     WriteLine(Option[i]);
                 else
                 {
-                    BackgroundColor=ConsoleColor.Blue;
+                    BackgroundColor = ConsoleColor.Blue;
                     WriteLine(Option[i]);
                     BackgroundColor = ConsoleColor.Black;
                 }
             }
+        }
+        public void dd()
+        {
+
         }
     }
     internal class Program
@@ -144,8 +150,8 @@ namespace OOP_Progect_Library
             string[] subjectOption = { "", "", "", "", "" };
             Menu mun = new Menu(option, "-----library-----");
             ConsoleKeyInfo KeyPressed = new ConsoleKeyInfo();
-
-            while (true)
+            bool check = true;
+            while (check)
             {
                 Clear();
                 mun.view();
@@ -157,21 +163,61 @@ namespace OOP_Progect_Library
                     continue; 
                 }
                 if(KeyPressed.Key== ConsoleKey.UpArrow)
-                {
-                    
+                {    
                         mun.index--;
                         if (mun.index == -1)
                             mun.index = option.Length - 1;   
                     continue;
                 }
+                if(KeyPressed.Key == ConsoleKey.Enter)
+                {
+                    if (mun.index == 0)
+                    {
+
+
+                    }
+                    if (mun.index == 1)
+                    {
+                        Clear();
+                        while (true)
+                        {
+                            try
+                            {
+                                Write("Enter the title:");
+                                string title = ReadLine();
+                                Write("Enter the Author:");
+                                string author = ReadLine();
+
+                            } 
+                            catch(Exception ex)
+                            {
+                                WriteLine(ex.Message);
+                                continue;
+                            }
+                            break;
+
+                       }
+
+                    }
+                        if (mun.index==2)
+                    {
+                        check = false;
+                        Console.WriteLine("Good_Bay!");
+                    }
+                
+                }
+
+
+
+
+
+
+
+
 
 
 
             }
-
-
-
-
         }
 
     }
