@@ -147,12 +147,23 @@ namespace OOP_Progect_Library
 
             while (true)
             {
+                Clear();
                 mun.view();
                 KeyPressed=ReadKey(true);
 
-                if (KeyPressed.Key == ConsoleKey.UpArrow)
+                if (KeyPressed.Key == ConsoleKey.DownArrow)
+                { 
                     mun.index++;
-                     continue;
+                    continue; 
+                }
+                if(KeyPressed.Key== ConsoleKey.UpArrow)
+                {
+                    
+                        mun.index--;
+                        if (mun.index == -1)
+                            mun.index = option.Length - 1;   
+                    continue;
+                }
 
 
 
