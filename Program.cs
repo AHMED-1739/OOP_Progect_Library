@@ -18,7 +18,7 @@ namespace OOP_Progect_Library
         public readonly string Author;
         public readonly string Subject;
         public bool  IsAvailable;
-        public Book(string Title, string Author, string Subject)
+        public Book(string Title, string Author, string Subject="Uncategorized")
         {
             this.Title = Title;
             this.Author = Author;
@@ -73,13 +73,18 @@ namespace OOP_Progect_Library
         }
         public void Add(Book Added_Book)
         {
+            if(string.IsNullOrWhiteSpace(Added_Book.Title)|| string.IsNullOrWhiteSpace(Added_Book.Author))
+            {
+                throw new Exception("the book must have a title and author name");
+            }
             List<Book> temp_Books = (from book in books
                                      where book.Author == Added_Book.Author && book.Title == Added_Book.Title
                                      select book).ToList();
+
             if (temp_Books.Count == 0)
             {
+                WriteLine("The book has been added.\n--------------------");
                 books.Add(Added_Book);
-                WriteLine("The book has been added.");
             }
             else WriteLine("the book is already in the library.");
         }
@@ -149,8 +154,10 @@ namespace OOP_Progect_Library
             string[] option = {"1-Search" ,"2-Add", "-Exit" };
             string[] subjectOption = { "", "", "", "", "" };
             Menu mun = new Menu(option, "-----library-----");
+            Library library = new Library();
+            library.Add(new Book("test1","test1"));
             ConsoleKeyInfo KeyPressed = new ConsoleKeyInfo();
-            bool check = true;
+           bool check = true;
             while (check)
             {
                 Clear();
@@ -171,51 +178,64 @@ namespace OOP_Progect_Library
                 }
                 if(KeyPressed.Key == ConsoleKey.Enter)
                 {
+                    //Search
                     if (mun.index == 0)
                     {
 
 
                     }
+                    //Add
                     if (mun.index == 1)
                     {
                         Clear();
                         while (true)
                         {
                             try
-                            {
+                            {   
+                                WriteLine("---Add a book--- \n");
                                 Write("Enter the title:");
                                 string title = ReadLine();
                                 Write("Enter the Author:");
                                 string author = ReadLine();
-
+                                Clear();
+                                library.Add(new Book(title, author, "history"));
                             } 
                             catch(Exception ex)
                             {
+                                Clear();
                                 WriteLine(ex.Message);
                                 continue;
                             }
-                            break;
+                            
+                           
+                            WriteLine("add another book?\npresee Y/N");
 
-                       }
+                            ConsoleKeyInfo choois;
+                            while (true)
+                            {
+                                 choois = ReadKey(true);
+                                if (choois.Key == ConsoleKey.Y||choois.Key==ConsoleKey.N)
+                                {
+                                    Clear();
+                                    break;
+                                }
+                                if (choois.Key != ConsoleKey.Y || choois.Key != ConsoleKey.N)
+                                    continue;
+                            }
+                            if (choois.Key == ConsoleKey.N)
+                                break;
+                        }
 
                     }
+                    // Exit
                         if (mun.index==2)
                     {
                         check = false;
-                        Console.WriteLine("Good_Bay!");
-                    }
-                
-                }
-
-
-
-
-
-
-
-
-
-
+                        Clear();
+                        WriteLine("Good_Bay!");
+                    }              
+                    
+                } 
 
             }
         }
