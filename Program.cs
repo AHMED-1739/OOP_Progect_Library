@@ -4,12 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
-using System.Diagnostics.Eventing.Reader;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 using static System.Console;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.Win32;
 namespace OOP_Progect_Library
 {
     class Book
@@ -125,7 +120,7 @@ namespace OOP_Progect_Library
             this.Title = Title;
             index = 0; 
         }
-        public void view()
+        private void view()
         {
             if (index >= Option.Length)
                 index = 0;
@@ -142,8 +137,35 @@ namespace OOP_Progect_Library
                 }
             }
         }
-        public void dd()
+        public void Move_On_Menu(ConsoleKeyInfo keyPressed)
         {
+
+            
+                if (keyPressed.Key == ConsoleKey.UpArrow)
+                {
+                    index--;
+                    if (index == -1)
+                        index = Option.Length-1;
+                }
+                else 
+                if (keyPressed.Key == ConsoleKey.DownArrow)
+                {
+                    index++;
+                    if (index > Option.Length)
+                        index = 0;
+                }
+            view();
+
+                 if(keyPressed.Key==ConsoleKey.Enter)
+            {
+      
+
+            }
+
+
+
+
+
 
         }
     }
@@ -152,93 +174,21 @@ namespace OOP_Progect_Library
         static void Main(string[] args)
         {
             string[] option = {"1-Search" ,"2-Add", "-Exit" };
-            string[] subjectOption = { "", "", "", "", "" };
-            Menu mun = new Menu(option, "-----library-----");
+            string[] Search_Menu_Option = { "1-Title", "2-Author", "3-Title & Author", "4-Title OR Author", "5-random books?" };
+            Menu Start_Menu = new Menu(option, "-----library-----");
+            Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
             Library library = new Library();
-            library.Add(new Book("test1","test1"));
+       
             ConsoleKeyInfo KeyPressed = new ConsoleKeyInfo();
            bool check = true;
             while (check)
             {
+                Start_Menu.Move_On_Menu(KeyPressed);
+                KeyPressed = ReadKey(true);
                 Clear();
-                mun.view();
-                KeyPressed=ReadKey(true);
-
-                if (KeyPressed.Key == ConsoleKey.DownArrow)
-                { 
-                    mun.index++;
-                    continue; 
-                }
-                if(KeyPressed.Key== ConsoleKey.UpArrow)
-                {    
-                        mun.index--;
-                        if (mun.index == -1)
-                            mun.index = option.Length - 1;   
-                    continue;
-                }
-                if(KeyPressed.Key == ConsoleKey.Enter)
-                {
-                    //Search
-                    if (mun.index == 0)
-                    {
-
-
-                    }
-                    //Add
-                    if (mun.index == 1)
-                    {
-                        Clear();
-                        while (true)
-                        {
-                            try
-                            {   
-                                WriteLine("---Add a book--- \n");
-                                Write("Enter the title:");
-                                string title = ReadLine();
-                                Write("Enter the Author:");
-                                string author = ReadLine();
-                                Clear();
-                                library.Add(new Book(title, author, "history"));
-                            } 
-                            catch(Exception ex)
-                            {
-                                Clear();
-                                WriteLine(ex.Message);
-                                continue;
-                            }
-                            
-                           
-                            WriteLine("add another book?\npresee Y/N");
-
-                            ConsoleKeyInfo choois;
-                            while (true)
-                            {
-                                 choois = ReadKey(true);
-                                if (choois.Key == ConsoleKey.Y||choois.Key==ConsoleKey.N)
-                                {
-                                    Clear();
-                                    break;
-                                }
-                                if (choois.Key != ConsoleKey.Y || choois.Key != ConsoleKey.N)
-                                    continue;
-                            }
-                            if (choois.Key == ConsoleKey.N)
-                                break;
-                        }
-
-                    }
-                    // Exit
-                        if (mun.index==2)
-                    {
-                        check = false;
-                        Clear();
-                        WriteLine("Good_Bay!");
-                    }              
-                    
-                } 
-
             }
-        }
 
+
+        }
     }
 }
