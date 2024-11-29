@@ -137,7 +137,7 @@ namespace OOP_Progect_Library
                 }
             }
         }
-        public void Move_On_Menu(ConsoleKeyInfo keyPressed)
+        public int Run(ConsoleKeyInfo keyPressed)
         {
 
             
@@ -146,27 +146,26 @@ namespace OOP_Progect_Library
                     index--;
                     if (index == -1)
                         index = Option.Length-1;
-                }
-                else 
-                if (keyPressed.Key == ConsoleKey.DownArrow)
+                view();
+                return -1;
+            }
+                else if (keyPressed.Key == ConsoleKey.DownArrow)
                 {
                     index++;
                     if (index > Option.Length)
-                        index = 0;
-                }
-            view();
-
-                 if(keyPressed.Key==ConsoleKey.Enter)
-            {
-      
-
+                        index = 0; view();
+                return -1;
             }
-
-
-
-
-
-
+               else if(keyPressed.Key==ConsoleKey.Enter)
+            {
+                view();
+                return index;
+            }
+                else
+            {
+                view();
+                return -1;
+            }
         }
     }
     internal class Program
@@ -180,12 +179,76 @@ namespace OOP_Progect_Library
             Library library = new Library();
        
             ConsoleKeyInfo KeyPressed = new ConsoleKeyInfo();
-           bool check = true;
+            bool check = true;
             while (check)
             {
-                Start_Menu.Move_On_Menu(KeyPressed);
+              int selectedIndex=  Start_Menu.Run(KeyPressed);
                 KeyPressed = ReadKey(true);
                 Clear();
+        
+
+                if (selectedIndex == 0)
+                {
+
+                }
+                else if (selectedIndex == 1)
+                {
+                    while (true)
+                    {
+                        try
+                        {
+                            WriteLine("---Add a book--- \n");
+                            Write("Enter the title:");
+                            string title = ReadLine();
+                            Write("Enter the Author:");
+                            string author = ReadLine();
+                            Clear();
+                            library.Add(new Book(title, author, "history"));
+                        }
+                        catch (Exception ex)
+                        {
+                            Clear();
+                            WriteLine(ex.Message);
+                            continue;
+                        }
+
+                        WriteLine("add another book?\npresee Y/N");
+
+                        ConsoleKeyInfo choois;
+                        while (true)
+                        {
+                            choois = ReadKey(true);
+                            if (choois.Key == ConsoleKey.Y || choois.Key == ConsoleKey.N)
+                            {
+                                Clear();
+                                break;
+                            }
+                            if (choois.Key != ConsoleKey.Y || choois.Key != ConsoleKey.N)
+                                continue;
+                        }
+                        if (choois.Key == ConsoleKey.N)
+                            break;
+                    }
+                }
+                else if (selectedIndex == 2)
+                {
+                    check = false;
+                    Console.WriteLine("Good-Bay!");
+                }
+                
+
+                else continue;
+
+
+
+
+
+
+
+
+
+
+
             }
 
 
