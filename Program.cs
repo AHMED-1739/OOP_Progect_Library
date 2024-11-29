@@ -171,9 +171,15 @@ namespace OOP_Progect_Library
             } while (KeyPressed.Key != ConsoleKey.Enter);
 
             return Selected_Index;
+        }
+
+        public void Answer()
+        {
+
 
 
         }
+
     }
     internal class Program
     {
@@ -183,14 +189,81 @@ namespace OOP_Progect_Library
             string[] Search_Menu_Option = { "1-Title", "2-Author", "3-Title & Author", "4-Title OR Author", "5-random books?", "-Back" };
             Menu Start_Menu = new Menu(Start_Menu_Option, "-----library-----");
             Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
+            ConsoleKeyInfo choois;
             Library library = new Library();
-           bool check = true;
+            bool check = true;
             while (check)
             {
+                Clear();
                 int SelectedIndex = Start_Menu.Run();
                     //Search
                     if (SelectedIndex == 0)
                     {
+                    
+                    SelectedIndex = Search_Menu.Run();
+                    Clear();
+                    while (true)
+                    {
+                        WriteLine("-----Search-----");
+                        if (SelectedIndex == 0)
+                        {
+                            Write("Enter the Title:");
+                            try
+                            {
+                                List<Book> temp_List = library.SearchByTitle(ReadLine());
+                                if (temp_List == null)
+                                { Clear(); WriteLine("the book not found.");  }
+                                else
+                                {
+                                    Clear(); WriteLine("Matching results:");
+                                    foreach (Book temp in temp_List)
+                                    {
+                                        library.Information_Of_Book(temp);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Clear();
+                                WriteLine(ex.Message);
+                                WriteLine("Enter the Title again\n");
+                                continue;
+                            }
+                            while (true)
+                            {
+                                WriteLine("Anothe Search? Y/N");
+                                choois = ReadKey(true);
+                                if (choois.Key == ConsoleKey.Y || choois.Key == ConsoleKey.N)
+                                {
+                                    Clear();
+                                    break;
+                                }
+                                if (choois.Key != ConsoleKey.Y || choois.Key != ConsoleKey.N)
+                                    continue;
+                            }
+                            if (choois.Key == ConsoleKey.N)
+                                break;
+
+                        }
+
+
+                        else if (SelectedIndex == 1)
+                        {
+
+                        }
+                        else if (SelectedIndex == 2)
+                        { }
+                        else if (SelectedIndex == 3)
+                        { }
+                        else if (SelectedIndex == 4)
+                        {
+
+                        }
+                        else if (SelectedIndex == 5)
+                            break; 
+                    }
+                   
+
 
 
                     }
@@ -208,7 +281,7 @@ namespace OOP_Progect_Library
                                 Write("Enter the Author:");
                                 string author = ReadLine();
                                 Clear();
-                                library.Add(new Book(title, author, "history"));
+                                library.Add(new Book(title, author));
                             } 
                             catch(Exception ex)
                             {
@@ -220,7 +293,7 @@ namespace OOP_Progect_Library
                            
                             WriteLine("add another book?\npresee Y/N");
 
-                            ConsoleKeyInfo choois;
+                           
                             while (true)
                             {
                                  choois = ReadKey(true);
@@ -238,7 +311,7 @@ namespace OOP_Progect_Library
 
                     }
                     // Exit
-                        if (SelectedIndex ==2)
+                        if (SelectedIndex == 2)
                     {
                         check = false;
                         Clear();
@@ -247,8 +320,12 @@ namespace OOP_Progect_Library
                     
                 } 
 
-            }
-        }
 
-    
-}
+
+
+
+
+
+
+
+}}}
