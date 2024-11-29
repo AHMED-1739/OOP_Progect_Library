@@ -27,6 +27,8 @@ namespace OOP_Progect_Library
         //search method
         public List<Book> SearchByAuthor(string Author)
         {
+            if (string.IsNullOrEmpty(Author))
+                throw new Exception("Author name cannot be black!!");
             List<Book> temp_Books = (from book in books where book.Author == Author select book).ToList();
             if (temp_Books.Count == 0)
                 return null;
@@ -34,6 +36,9 @@ namespace OOP_Progect_Library
         }
         public List<Book> SearchByTitle(string Title)
         {
+            if (string.IsNullOrEmpty(Title))
+                throw new Exception("Book Title cannot be empty!");
+
             List<Book> temp_Books = (from book in books where book.Title == Title select book).ToList();
                if(temp_Books.Count == 0)
                 return null;
@@ -65,6 +70,11 @@ namespace OOP_Progect_Library
                     MatchTheAuthorsName.Add(books[i]);
             }
          return(MatchTheAuthorsName,MatchTheTitle);
+        }
+        //Book info
+        public void Information_Of_Book(Book book)
+        {
+            WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}",book.Title,book.Author,book.Subject);
         }
         public void Add(Book Added_Book)
         {
@@ -113,21 +123,21 @@ namespace OOP_Progect_Library
     {
         string[] Option;
         string Title;
-       public int index;
+       public int Selected_Index;
         public Menu(string[] Option,string Title )
         {
             this.Option = Option;
             this.Title = Title;
-            index = 0; 
+            Selected_Index = 0; 
         }
         private void view()
         {
-            if (index >= Option.Length)
-                index = 0;
+            if (Selected_Index >= Option.Length)
+                Selected_Index = 0;
             WriteLine(Title + "\n");
             for (int i = 0; i < Option.Length; i++)
             {
-                if (i != index)
+                if (i != Selected_Index)
                     WriteLine(Option[i]);
                 else
                 {
@@ -137,35 +147,35 @@ namespace OOP_Progect_Library
                 }
             }
         }
-        public int Run(ConsoleKeyInfo keyPressed)
+        public int Run()
         {
+            ConsoleKeyInfo KeyPressed;
+            do
+            {
+                Clear();
+                view();
+                KeyPressed = Console.ReadKey(true);
+                if(KeyPressed.Key==ConsoleKey.UpArrow)
+                {   
+                    Selected_Index--;
+                      if(Selected_Index ==-1)
+                        Selected_Index=Option.Length-1;
+                }
 
-            
-                if (keyPressed.Key == ConsoleKey.UpArrow)
+              else  if (KeyPressed.Key == ConsoleKey.DownArrow)
                 {
-                    index--;
-                    if (index == -1)
-                        index = Option.Length-1;
-                view();
-                return -1;
-            }
-                else if (keyPressed.Key == ConsoleKey.DownArrow)
-                {
-                    index++;
-                    if (index > Option.Length)
-                        index = 0; view();
-                return -1;
-            }
-               else if(keyPressed.Key==ConsoleKey.Enter)
-            {
-                view();
-                return index;
-            }
-                else
-            {
-                view();
-                return -1;
-            }
+                    Selected_Index++;
+                    if (Selected_Index >Option.Length)
+                        Selected_Index = 0;
+                }
+
+
+
+            } while (KeyPressed.Key != ConsoleKey.Enter);
+
+            return Selected_Index;
+
+         
         }
     }
     internal class Program
@@ -173,23 +183,71 @@ namespace OOP_Progect_Library
         static void Main(string[] args)
         {
             string[] option = {"1-Search" ,"2-Add", "-Exit" };
-            string[] Search_Menu_Option = { "1-Title", "2-Author", "3-Title & Author", "4-Title OR Author", "5-random books?" };
+            string[] Search_Menu_Option = { "1-Title", "2-Author", "3-Title & Author", "4-Title OR Author", "5-random books?","-Back" };
             Menu Start_Menu = new Menu(option, "-----library-----");
             Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
             Library library = new Library();
-       
-            ConsoleKeyInfo KeyPressed = new ConsoleKeyInfo();
             bool check = true;
             while (check)
             {
-              int selectedIndex=  Start_Menu.Run(KeyPressed);
-                KeyPressed = ReadKey(true);
+              int selectedIndex=  Start_Menu.Run();
                 Clear();
-        
-
                 if (selectedIndex == 0)
                 {
+                    selectedIndex = Search_Menu.Run();
+                    Clear();
+                    while (true)
+                    {
+                        
+                        if (selectedIndex == 0)
+                        {
+                            WriteLine("----Search----");
+                            Write("Enter the Title:");
+                            try
+                            {
+                                List<Book> temp_List = library.SearchByTitle(ReadLine());
+                                if (temp_List.Count == 0)
+                                    Console.WriteLine("the book not found.");
+                                else
+                                {
+                                    WriteLine("Matching results:");
+                                    foreach (Book temp in temp_List)
+                                    {
+                                        library.Information_Of_Book(temp);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Clear();
+                                WriteLine(ex.Message);
+                                WriteLine("Enter the Title again\n");
+                                continue;
+                            }
 
+
+
+
+                        }
+                        else if (selectedIndex == 1)
+                        {
+
+                        }
+                        else if (selectedIndex == 2)
+                        {
+
+                        }
+                        else if (selectedIndex == 3)
+                        {
+
+                        }
+                        else if (selectedIndex == 4)
+                        {
+
+                        }
+                        else if (selectedIndex == 5)
+                            break;                 
+                    }
                 }
                 else if (selectedIndex == 1)
                 {
@@ -203,7 +261,7 @@ namespace OOP_Progect_Library
                             Write("Enter the Author:");
                             string author = ReadLine();
                             Clear();
-                            library.Add(new Book(title, author, "history"));
+                            library.Add(new Book(title, author));
                         }
                         catch (Exception ex)
                         {
