@@ -71,6 +71,10 @@ namespace OOP_Progect_Library
             }
          return(MatchTheAuthorsName,MatchTheTitle);
         }
+        public void Information_Of_Book(Book book)
+        {
+            WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}", book.Title, book.Author, book.Subject);
+        }   
         public void Add(Book Added_Book)
         {
             if(string.IsNullOrWhiteSpace(Added_Book.Title)|| string.IsNullOrWhiteSpace(Added_Book.Author))
@@ -175,41 +179,23 @@ namespace OOP_Progect_Library
     {
         static void Main(string[] args)
         {
-            string[] option = {"1-Search" ,"2-Add", "-Exit" };
-            string[] subjectOption = { "", "", "", "", "" };
-            Menu mun = new Menu(option, "-----library-----");
+            string[] Start_Menu_Option = {"1-Search" ,"2-Add", "-Exit" };
+            string[] Search_Menu_Option = { "1-Title", "2-Author", "3-Title & Author", "4-Title OR Author", "5-random books?", "-Back" };
+            Menu Start_Menu = new Menu(Start_Menu_Option, "-----library-----");
+            Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
             Library library = new Library();
-            library.Add(new Book("test1","test1"));
-            ConsoleKeyInfo KeyPressed = new ConsoleKeyInfo();
            bool check = true;
             while (check)
             {
-                Clear();
-                mun.view();
-                KeyPressed=ReadKey(true);
-
-                if (KeyPressed.Key == ConsoleKey.DownArrow)
-                { 
-                    mun.Selected_Index++;
-                    continue; 
-                }
-                if(KeyPressed.Key== ConsoleKey.UpArrow)
-                {    
-                        mun.Selected_Index--;
-                        if (mun.Selected_Index == -1)
-                            mun.Selected_Index = option.Length - 1;   
-                    continue;
-                }
-                if(KeyPressed.Key == ConsoleKey.Enter)
-                {
+                int SelectedIndex = Start_Menu.Run();
                     //Search
-                    if (mun.Selected_Index == 0)
+                    if (SelectedIndex == 0)
                     {
 
 
                     }
                     //Add
-                    if (mun.Selected_Index == 1)
+                    if (SelectedIndex == 1)
                     {
                         Clear();
                         while (true)
@@ -252,7 +238,7 @@ namespace OOP_Progect_Library
 
                     }
                     // Exit
-                        if (mun.Selected_Index==2)
+                        if (SelectedIndex ==2)
                     {
                         check = false;
                         Clear();
@@ -264,5 +250,5 @@ namespace OOP_Progect_Library
             }
         }
 
-    }
+    
 }
