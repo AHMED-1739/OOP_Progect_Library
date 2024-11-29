@@ -30,22 +30,28 @@ namespace OOP_Progect_Library
     {
       public  List<Book> books=new List<Book>();
         //search method
-        public List<Book> SearchByAuthor(string Author)
-        {
-            List<Book> temp_Books = (from book in books where book.Author == Author select book).ToList();
-            if (temp_Books.Count == 0)
-                return null;
-            return temp_Books;
-        }
         public List<Book> SearchByTitle(string Title)
         {
+            if (string.IsNullOrWhiteSpace(Title))
+                throw new Exception("The book name must not be empty.");
             List<Book> temp_Books = (from book in books where book.Title == Title select book).ToList();
                if(temp_Books.Count == 0)
                 return null;
                 return temp_Books;
         }
+        public List<Book> SearchByAuthor(string Author)
+        {
+            if (string.IsNullOrWhiteSpace(Author))
+                throw new Exception("Author name must not be blank.");
+            List<Book> temp_Books = (from book in books where book.Author == Author select book).ToList();
+            if (temp_Books.Count == 0)
+                return null;
+            return temp_Books;
+        }
         public List<Book> Search(string Title,string Author)
-        { 
+        {
+            if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Author))
+                throw new Exception("Author name or book title cannot be blank.");
             List<Book> temp_Books = (from book in books  
                                      where book.Title==Title&&book.Author==Author 
                                      select book).ToList();
@@ -173,11 +179,22 @@ namespace OOP_Progect_Library
             return Selected_Index;
         }
 
-        public void Answer()
+      static  public ConsoleKeyInfo Answer()
         {
+            ConsoleKeyInfo choois;
 
-
-
+            while (true)
+            {
+                choois = ReadKey(true);
+                if (choois.Key == ConsoleKey.Y || choois.Key == ConsoleKey.N)
+                {
+                    Clear();
+                    break;
+                }
+                if (choois.Key != ConsoleKey.Y || choois.Key != ConsoleKey.N)
+                    continue;
+            }
+             return choois;
         }
 
     }
@@ -229,26 +246,16 @@ namespace OOP_Progect_Library
                                 WriteLine("Enter the Title again\n");
                                 continue;
                             }
-                            while (true)
-                            {
-                                WriteLine("Anothe Search? Y/N");
-                                choois = ReadKey(true);
-                                if (choois.Key == ConsoleKey.Y || choois.Key == ConsoleKey.N)
-                                {
-                                    Clear();
-                                    break;
-                                }
-                                if (choois.Key != ConsoleKey.Y || choois.Key != ConsoleKey.N)
-                                    continue;
-                            }
+                             choois = Menu.Answer();
                             if (choois.Key == ConsoleKey.N)
                                 break;
-
+                            else
+                                continue;
                         }
-
-
                         else if (SelectedIndex == 1)
                         {
+                            WriteLine("Enter the Author:");
+
 
                         }
                         else if (SelectedIndex == 2)
@@ -291,23 +298,13 @@ namespace OOP_Progect_Library
                             }
                             
                            
-                            WriteLine("add another book?\npresee Y/N");
-
-                           
-                            while (true)
-                            {
-                                 choois = ReadKey(true);
-                                if (choois.Key == ConsoleKey.Y||choois.Key==ConsoleKey.N)
-                                {
-                                    Clear();
-                                    break;
-                                }
-                                if (choois.Key != ConsoleKey.Y || choois.Key != ConsoleKey.N)
-                                    continue;
-                            }
-                            if (choois.Key == ConsoleKey.N)
-                                break;
-                        }
+                            WriteLine("add another book?\n Y/N");
+                        choois = Menu.Answer();
+                        if (choois.Key == ConsoleKey.N)
+                            break;
+                        else
+                            continue;
+                    }
 
                     }
                     // Exit
