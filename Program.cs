@@ -30,24 +30,7 @@ namespace OOP_Progect_Library
     {
         public List<Book> books = new List<Book>();
         //search method
-        public List<Book> SearchByTitle(string Title)
-        {
-            if (string.IsNullOrWhiteSpace(Title))
-                throw new Exception("The book name must not be empty.");
-            List<Book> temp_Books = (from book in books where book.Title == Title select book).ToList();
-            if (temp_Books.Count == 0)
-                return null;
-            return temp_Books;
-        }
-        public List<Book> SearchByAuthor(string Author)
-        {
-            if (string.IsNullOrWhiteSpace(Author))
-                throw new Exception("Author name must not be blank.");
-            List<Book> temp_Books = (from book in books where book.Author == Author select book).ToList();
-            if (temp_Books.Count == 0)
-                return null;
-            return temp_Books;
-        }
+
         public List<Book> Search(string Title, string Author)
         {
             if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Author))
@@ -196,14 +179,13 @@ namespace OOP_Progect_Library
             }
             return choois;
         }
-
     }
     internal class Program
     {
         static void Main(string[] args)
         {
-            string[] Start_Menu_Option = { "1-Search", "2-Add", "-Exit" };
-            string[] Search_Menu_Option = { "1-Title", "2-Author", "3-Title & Author", "4-Title OR Author", "5-random books?", "-Back" };
+            string[] Start_Menu_Option = { "-Search", "-Add", "-Exit" };
+            string[] Search_Menu_Option = { "-Title & Author", "-Title OR Author", "-random books?", "-Back" };
             Menu Start_Menu = new Menu(Start_Menu_Option, "-----library-----");
             Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
             ConsoleKeyInfo choois;
@@ -216,7 +198,6 @@ namespace OOP_Progect_Library
                 //Search
                 if (SelectedIndex == 0)
                 {
-
                     SelectedIndex = Search_Menu.Run();
                     Clear();
                     while (true)
@@ -224,49 +205,17 @@ namespace OOP_Progect_Library
                         WriteLine("-----Search-----");
                         if (SelectedIndex == 0)
                         {
-                            Write("Enter the Title:");
-                            try
-                            {
-                                List<Book> temp_List = library.SearchByTitle(ReadLine());
-                                if (temp_List == null)
-                                { Clear(); WriteLine("the book not found."); }
-                                else
-                                {
-                                    Clear(); WriteLine("Matching results:");
-                                    foreach (Book temp in temp_List)
-                                    {
-                                        library.Information_Of_Book(temp);
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Clear();
-                                WriteLine(ex.Message);
-                                WriteLine("Enter the Title again\n");
-                                continue;
-                            }
-                            choois = Menu.Answer();
-                            if (choois.Key == ConsoleKey.N)
-                                break;
-                            else
-                                continue;
+
                         }
                         else if (SelectedIndex == 1)
                         {
-                            WriteLine("Enter the Author:");
-
 
                         }
                         else if (SelectedIndex == 2)
-                        { }
-                        else if (SelectedIndex == 3)
-                        { }
-                        else if (SelectedIndex == 4)
                         {
 
                         }
-                        else if (SelectedIndex == 5)
+                        else if (SelectedIndex == 3)
                             break;
                     }
 
