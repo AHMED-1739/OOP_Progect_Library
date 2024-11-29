@@ -118,21 +118,21 @@ namespace OOP_Progect_Library
     {
         string[] Option;
         string Title;
-       public int index;
+       public int Selected_Index;
         public Menu(string[] Option,string Title )
         {
             this.Option = Option;
             this.Title = Title;
-            index = 0; 
+            Selected_Index = 0; 
         }
         public void view()
         {
-            if (index >= Option.Length)
-                index = 0;
+            if (Selected_Index >= Option.Length)
+                Selected_Index = 0;
             WriteLine(Title + "\n");
             for (int i = 0; i < Option.Length; i++)
             {
-                if (i != index)
+                if (i != Selected_Index)
                     WriteLine(Option[i]);
                 else
                 {
@@ -142,8 +142,32 @@ namespace OOP_Progect_Library
                 }
             }
         }
-        public void dd()
+        public int Run()
         {
+            ConsoleKeyInfo KeyPressed;
+            do
+            {
+                Clear();
+                view();
+                KeyPressed = Console.ReadKey(true);
+                if (KeyPressed.Key == ConsoleKey.UpArrow)
+                {
+                    Selected_Index--;
+                    if (Selected_Index == -1)
+                        Selected_Index = Option.Length - 1;
+                }
+
+                else if (KeyPressed.Key == ConsoleKey.DownArrow)
+                {
+                    Selected_Index++;
+                    if (Selected_Index > Option.Length)
+                        Selected_Index = 0;
+                }
+
+            } while (KeyPressed.Key != ConsoleKey.Enter);
+
+            return Selected_Index;
+
 
         }
     }
@@ -166,26 +190,26 @@ namespace OOP_Progect_Library
 
                 if (KeyPressed.Key == ConsoleKey.DownArrow)
                 { 
-                    mun.index++;
+                    mun.Selected_Index++;
                     continue; 
                 }
                 if(KeyPressed.Key== ConsoleKey.UpArrow)
                 {    
-                        mun.index--;
-                        if (mun.index == -1)
-                            mun.index = option.Length - 1;   
+                        mun.Selected_Index--;
+                        if (mun.Selected_Index == -1)
+                            mun.Selected_Index = option.Length - 1;   
                     continue;
                 }
                 if(KeyPressed.Key == ConsoleKey.Enter)
                 {
                     //Search
-                    if (mun.index == 0)
+                    if (mun.Selected_Index == 0)
                     {
 
 
                     }
                     //Add
-                    if (mun.index == 1)
+                    if (mun.Selected_Index == 1)
                     {
                         Clear();
                         while (true)
@@ -228,7 +252,7 @@ namespace OOP_Progect_Library
 
                     }
                     // Exit
-                        if (mun.index==2)
+                        if (mun.Selected_Index==2)
                     {
                         check = false;
                         Clear();
