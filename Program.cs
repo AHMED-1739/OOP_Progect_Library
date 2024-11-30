@@ -30,24 +30,6 @@ namespace OOP_Progect_Library
     {
       public  List<Book> books=new List<Book>();
         //search method
-        public List<Book> SearchByTitle(string Title)
-        {
-            if (string.IsNullOrWhiteSpace(Title))
-                throw new Exception("The book name must not be empty.");
-            List<Book> temp_Books = (from book in books where book.Title == Title select book).ToList();
-               if(temp_Books.Count == 0)
-                return null;
-                return temp_Books;
-        }
-        public List<Book> SearchByAuthor(string Author)
-        {
-            if (string.IsNullOrWhiteSpace(Author))
-                throw new Exception("Author name must not be blank.");
-            List<Book> temp_Books = (from book in books where book.Author == Author select book).ToList();
-            if (temp_Books.Count == 0)
-                return null;
-            return temp_Books;
-        }
         public List<Book> Search(string Title,string Author)
         {
             if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Author))
@@ -75,6 +57,7 @@ namespace OOP_Progect_Library
                 if (books[i].Author==TitleOrAuthor)
                     MatchTheAuthorsName.Add(books[i]);
             }
+
          return(MatchTheAuthorsName,MatchTheTitle);
         }
         public void Information_Of_Book(Book book)
@@ -113,7 +96,7 @@ namespace OOP_Progect_Library
             while (i < limit)
             {
                 int index = random.Next(0, books.Count);
-                WriteLine("Title: {0}Author: {1}", books[index].Title, books[index].Author);
+                WriteLine("Title: {0}\nAuthor: {1}", books[index].Title, books[index].Author);
                 i++;
             }
         }
@@ -197,13 +180,14 @@ namespace OOP_Progect_Library
              return choois;
         }
 
+
     }
     internal class Program
     {
         static void Main(string[] args)
         {
-            string[] Start_Menu_Option = {"1-Search" ,"2-Add", "-Exit" };
-            string[] Search_Menu_Option = { "1-Title", "2-Author", "3-Title & Author", "4-Title OR Author", "5-random books?", "-Back" };
+            string[] Start_Menu_Option = {"-Search" ,"-Add", "-Exit" };
+            string[] Search_Menu_Option = {  "-Title & Author", "-Title OR Author", "-random books?", "-Back" };
             Menu Start_Menu = new Menu(Start_Menu_Option, "-----library-----");
             Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
             ConsoleKeyInfo choois;
@@ -227,9 +211,13 @@ namespace OOP_Progect_Library
                             Write("Enter the Title:");
                             try
                             {
-                                List<Book> temp_List = library.SearchByTitle(ReadLine());
+                                WriteLine("Enter the Title :");
+                                 string Title=ReadLine();
+                                WriteLine("Enter The Author:");
+                                string Author=ReadLine();   
+                                List<Book> temp_List = library.Search(Title,Author);
                                 if (temp_List == null)
-                                { Clear(); WriteLine("the book not found.");  }
+                                { Clear(); WriteLine("the book not found."); }
                                 else
                                 {
                                     Clear(); WriteLine("Matching results:");
@@ -246,7 +234,7 @@ namespace OOP_Progect_Library
                                 WriteLine("Enter the Title again\n");
                                 continue;
                             }
-                             choois = Menu.Answer();
+                            choois = Menu.Answer();
                             if (choois.Key == ConsoleKey.N)
                                 break;
                             else
@@ -254,20 +242,49 @@ namespace OOP_Progect_Library
                         }
                         else if (SelectedIndex == 1)
                         {
-                            WriteLine("Enter the Author:");
-
-
+                            List<Book> temp_List_Author;
+                            List<Book> temp_List_Title;
+                            WriteLine("Enter the Title OR Author:");
+                           (temp_List_Author,temp_List_Title)= library.SearchByBoth(ReadLine());
+                            if (temp_List_Author.Count != 0)
+                            {
+                                WriteLine("Book that match the Author:");
+                                for (int i = 0; i < temp_List_Author.Count; i++)
+                                {
+                                    WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}", temp_List_Author[i].Title, temp_List_Author[i].Author, temp_List_Author[i].Subject);
+                                }
+                            }
+                            else WriteLine("Ther is no Author Match");
+                            WriteLine();
+                            if (temp_List_Title.Count != 0)
+                            {
+                                WriteLine("Restult that match the Title:");
+                                for (int i = 0; i < temp_List_Title.Count; i++)
+                                {
+                                    WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}", temp_List_Title[i].Title, temp_List_Title[i].Author, temp_List_Title[i].Subject);
+                                }
+                            }
+                            else WriteLine("ther is no book match the title");
+                            WriteLine("Another search? Y/N");
+                            choois = Menu.Answer();
+                            if (choois.Key == ConsoleKey.N)
+                                break;
+                            else
+                                continue;
                         }
                         else if (SelectedIndex == 2)
-                        { }
-                        else if (SelectedIndex == 3)
-                        { }
-                        else if (SelectedIndex == 4)
-                        {
-
+                        { 
+                             library.DisPlayRandomBook();
+                            WriteLine("Another Search? Y/N");
+                            choois = Menu.Answer();
+                            if (choois.Key == ConsoleKey.N)
+                                break;
+                            else
+                                continue;
                         }
-                        else if (SelectedIndex == 5)
-                            break; 
+                        else if (SelectedIndex == 3)
+                            break;
+                   
                     }
                    
 
