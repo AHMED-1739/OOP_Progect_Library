@@ -118,7 +118,7 @@ namespace OOP_Progect_Library
             this.Title = Title;
             Selected_Index = 0; 
         }
-        public void view()
+        private void view()
         {
             if (Selected_Index >= Option.Length)
                 Selected_Index = 0;
@@ -142,7 +142,7 @@ namespace OOP_Progect_Library
             {
                 Clear();
                 view();
-                KeyPressed = Console.ReadKey(true);
+                KeyPressed = ReadKey(true);
                 if (KeyPressed.Key == ConsoleKey.UpArrow)
                 {
                     Selected_Index--;
@@ -162,7 +162,7 @@ namespace OOP_Progect_Library
             return Selected_Index;
         }
 
-      static  public ConsoleKeyInfo Answer()
+      static  public ConsoleKeyInfo Answer_Y_N()
         {
             ConsoleKeyInfo choois;
 
@@ -179,8 +179,34 @@ namespace OOP_Progect_Library
             }
              return choois;
         }
-
-
+       static public (ConsoleKeyInfo, string )CaptureExitKey(string Title,string firstLine)
+        {
+            ConsoleKeyInfo keypressed;
+            string TheString = "";
+            Write(Title + "\n" + firstLine);
+            do
+            {
+                keypressed = ReadKey(true);
+                if (keypressed.Key == ConsoleKey.Backspace)
+                {
+                    if (TheString.Length > 0)
+                    {
+                        Clear();
+                        Write(Title+"\n"+firstLine);
+                        TheString = TheString.Remove(TheString.Length - 1);
+                        Write(TheString);
+                    }
+                    continue;
+                }
+                if (keypressed.KeyChar != 13&&keypressed.KeyChar !=27)
+                {
+                    Write(keypressed.KeyChar);
+                    TheString += keypressed.KeyChar;
+                }
+            } while (keypressed.Key != ConsoleKey.Escape && keypressed.Key != ConsoleKey.Enter);
+            WriteLine();
+                 return( keypressed,TheString);
+        }
     }
     internal class Program
     {
@@ -195,7 +221,7 @@ namespace OOP_Progect_Library
             bool check = true;
             while (check)
             {
-                Clear();
+              
                 int SelectedIndex = Start_Menu.Run();
                     //Search
                     if (SelectedIndex == 0)
@@ -234,7 +260,7 @@ namespace OOP_Progect_Library
                                 WriteLine("Enter the Title again\n");
                                 continue;
                             }
-                            choois = Menu.Answer();
+                            choois = Menu.Answer_Y_N();
                             if (choois.Key == ConsoleKey.N)
                                 break;
                             else
@@ -266,7 +292,7 @@ namespace OOP_Progect_Library
                             }
                             else WriteLine("ther is no book match the title");
                             WriteLine("Another search? Y/N");
-                            choois = Menu.Answer();
+                            choois = Menu.Answer_Y_N();
                             if (choois.Key == ConsoleKey.N)
                                 break;
                             else
@@ -276,7 +302,7 @@ namespace OOP_Progect_Library
                         { 
                              library.DisPlayRandomBook();
                             WriteLine("Another Search? Y/N");
-                            choois = Menu.Answer();
+                            choois = Menu.Answer_Y_N();
                             if (choois.Key == ConsoleKey.N)
                                 break;
                             else
@@ -298,12 +324,26 @@ namespace OOP_Progect_Library
                         while (true)
                         {
                             try
-                            {   
-                                WriteLine("---Add a book--- \n");
-                                Write("Enter the title:");
-                                string title = ReadLine();
-                                Write("Enter the Author:");
-                                string author = ReadLine();
+                            {
+                            string title;
+                            string author;
+
+                              (choois,title )=Menu.CaptureExitKey("ESC.\n---Add a book---","Enter the title: ");
+
+                            if (choois.Key == ConsoleKey.Escape)
+                            {
+                                title = null;
+                                Clear();
+                                break;
+                            }
+                            Clear();
+                            (choois,author )= Menu.CaptureExitKey($"ESC.\n---Add a book---\nEnter the title: {title} ", "Enter the author: ");
+                            if (choois.Key == ConsoleKey.Escape)
+                            {
+                                author = null;
+                                Clear();
+                                break;
+                            }
                                 Clear();
                                 library.Add(new Book(title, author));
                             } 
@@ -312,11 +352,9 @@ namespace OOP_Progect_Library
                                 Clear();
                                 WriteLine(ex.Message);
                                 continue;
-                            }
-                            
-                           
+                            }           
                             WriteLine("add another book?\n Y/N");
-                        choois = Menu.Answer();
+                        choois = Menu.Answer_Y_N();
                         if (choois.Key == ConsoleKey.N)
                             break;
                         else
@@ -333,13 +371,5 @@ namespace OOP_Progect_Library
                     }              
                     
                 } 
-
-
-
-
-
-
-
-
 
 }}}
