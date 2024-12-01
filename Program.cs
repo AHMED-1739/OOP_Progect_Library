@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using static System.Console;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Win32;
+using System.Runtime.CompilerServices;
 namespace OOP_Progect_Library
 {
     class Book
@@ -28,7 +29,25 @@ namespace OOP_Progect_Library
     }
     class Library
     {
-      public  List<Book> books=new List<Book>();
+        public List<Book> books=new List<Book>();
+        public Library()
+        {
+            books = new List<Book>
+            {
+            new Book("Origins", "Lewis Dartnell", "History"),
+            new Book("1491", "Charles C. Mann", "History"),
+            new Book("Sapiens", "Yuval Noah Harari", "History"),
+            new Book("Cosmos", "Carl Sagan", "Physics"),
+            new Book("Light", "Albert A. Michelson", "Physics"),
+            new Book("Quantum", "Manjit Kumar", "Physics"),
+            new Book("Animal Farm", "George Orwell", "Novels"),
+            new Book("Dracula", "Bram Stoker", "Novels"),
+            new Book("Frankenstein", "Mary Shelley", "Novels"),
+            new Book("Ethics", "Baruch Spinoza", "Philosophy"),
+            new Book("Being", "Martin Heidegger", "Philosophy"),
+            new Book("Existence", "Jean-Paul Sartre", "Philosophy")
+            };
+        }
         //search method
         public List<Book> Search(string Title,string Author)
         {
@@ -87,16 +106,20 @@ namespace OOP_Progect_Library
             int limit;
             if (books.Count == 0)
             { WriteLine("there is no book in this library!."); return; }
-            else if (books.Count <= 5)
+            else if (books.Count < 4)
                 limit = books.Count;
             else 
-                limit = 6;
+                limit = 4;
             Random random = new Random();
             int i = 0;
             while (i < limit)
             {
+                ForegroundColor = ConsoleColor.Black;
+                BackgroundColor = ConsoleColor.White;
                 int index = random.Next(0, books.Count);
-                WriteLine("Title: {0}\nAuthor: {1}", books[index].Title, books[index].Author);
+                WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}", books[index].Title, books[index].Author, books[index].Subject);
+                ResetColor();
+                WriteLine("-----------------------------");
                 i++;
             }
         }
@@ -118,6 +141,7 @@ namespace OOP_Progect_Library
             this.Title = Title;
             Selected_Index = 0; 
         }
+        //only used in run method.
         private void view()
         {
             if (Selected_Index >= Option.Length)
@@ -126,17 +150,18 @@ namespace OOP_Progect_Library
             for (int i = 0; i < Option.Length; i++)
             {
                 if (i != Selected_Index)
-                    WriteLine(Option[i]);
+                    WriteLine($"-{Option[i]}");
                 else
                 {
                     BackgroundColor = ConsoleColor.Blue;
-                    WriteLine(Option[i]);
+                    WriteLine($"-{Option[i]}  <<");
                     BackgroundColor = ConsoleColor.Black;
                 }
             }
         }
+        // this method will run the Menu.
         public int Run()
-        {
+        { 
             ConsoleKeyInfo KeyPressed;
             do
             {
@@ -158,10 +183,10 @@ namespace OOP_Progect_Library
                 }
 
             } while (KeyPressed.Key != ConsoleKey.Enter);
-
+              Clear();
             return Selected_Index;
         }
-
+       // just to ask the user if he want to repeate the process or not
       static  public ConsoleKeyInfo Answer_Y_N()
         {
             ConsoleKeyInfo choois;
@@ -179,7 +204,7 @@ namespace OOP_Progect_Library
             }
              return choois;
         }
-       static public (ConsoleKeyInfo, string )CaptureExitKey(string Title,string firstLine)
+        static public (ConsoleKeyInfo, string )CaptureExitKey(string Title,string firstLine)
         {
             ConsoleKeyInfo keypressed;
             string TheString = "";
@@ -212,10 +237,12 @@ namespace OOP_Progect_Library
     {
         static void Main(string[] args)
         {
-            string[] Start_Menu_Option = {"-Search" ,"-Add", "-Exit" };
-            string[] Search_Menu_Option = {  "-Title & Author", "-Title OR Author", "-random books?", "-Back" };
+            string[] Start_Menu_Option = {"Search" ,"Add", "Exit" };
+            string[] Search_Menu_Option = {  "Title & Author", "Title OR Author", "random books?","Subject", "Back" };
+            string[] Subject_Menu_Option = { "History", "Physics", "Novels", "Philosophy", "Uncategorized" };
             Menu Start_Menu = new Menu(Start_Menu_Option, "-----library-----");
             Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
+            Menu Subject_Menu=new Menu(Subject_Menu_Option,"-----Subject-----");
             ConsoleKeyInfo choois;
             Library library = new Library();
             bool check = true;
@@ -308,14 +335,10 @@ namespace OOP_Progect_Library
                             else
                                 continue;
                         }
-                        else if (SelectedIndex == 3)
+                        else if (SelectedIndex == 4)
                             break;
                    
                     }
-                   
-
-
-
                     }
                     //Add
                     if (SelectedIndex == 1)
@@ -344,8 +367,10 @@ namespace OOP_Progect_Library
                                 Clear();
                                 break;
                             }
-                                Clear();
-                                library.Add(new Book(title, author));
+                            WriteLine("the Subject of the book");
+                          
+                            Clear();
+                                library.Add(new Book(title, author, Subject_Menu_Option[Subject_Menu.Run()]));
                             } 
                             catch(Exception ex)
                             {
@@ -359,17 +384,19 @@ namespace OOP_Progect_Library
                             break;
                         else
                             continue;
-                    }
-
+                      }
                     }
                     // Exit
-                        if (SelectedIndex == 2)
+                    if (SelectedIndex == 2)
                     {
                         check = false;
                         Clear();
                         WriteLine("Good_Bay!");
                     }              
+            
                     
-                } 
+
+
+            } 
 
 }}}
