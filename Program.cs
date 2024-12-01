@@ -23,10 +23,10 @@ namespace OOP_Progect_Library
     }
     class Library
     {
-        public List<Book> books=new List<Book>();
+        public List<Book> Books=new List<Book>();
         public Library()
         {
-            books = new List<Book>
+            Books = new List<Book>
             {
             new Book("Origins", "Lewis Dartnell", "History"),
             new Book("1491", "Charles C. Mann", "History"),
@@ -51,7 +51,7 @@ namespace OOP_Progect_Library
         {
             if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Author))
                 throw new Exception("Author name or book title cannot be blank.");
-            List<Book> temp_Books = (from book in books  
+            List<Book> temp_Books = (from book in Books  
                                      where book.Title==Title&&book.Author==Author 
                                      select book).ToList();
              return temp_Books;
@@ -65,12 +65,12 @@ namespace OOP_Progect_Library
             List<Book> MatchTheAuthorsName=new List<Book> ();
             List<Book>MatchTheTitle=new List<Book> ();
 
-         for(int i=0;i<books.Count;i++)
+         for(int i=0;i<Books.Count;i++)
             {
-                if (books[i].Title == TitleOrAuthor)
-                    MatchTheTitle.Add(books[i]);
-                if (books[i].Author==TitleOrAuthor)
-                    MatchTheAuthorsName.Add(books[i]);
+                if (Books[i].Title == TitleOrAuthor)
+                    MatchTheTitle.Add(Books[i]);
+                if (Books[i].Author==TitleOrAuthor)
+                    MatchTheAuthorsName.Add(Books[i]);
             }
 
          return(MatchTheAuthorsName,MatchTheTitle);
@@ -81,23 +81,23 @@ namespace OOP_Progect_Library
             {
                 throw new Exception("the book must have a title and author name");
             }
-                  for(int i=0;i<books.Count;i++)
-                if (books[i].Author == Added_Book.Author && books[i].Title == Added_Book.Title && books[i].Subject==Added_Book.Subject)
+                  for(int i=0;i<Books.Count;i++)
+                if (Books[i].Author == Added_Book.Author && Books[i].Title == Added_Book.Title && Books[i].Subject==Added_Book.Subject)
                 {
                     WriteLine("the book is already in the library.");
                     return;
                 }
                 WriteLine("The book has been added.\n--------------------");
-                books.Add(Added_Book);          
+                Books.Add(Added_Book);          
         }
         //Show random books to user
         public void DisPlayRandomBook()
         {
             int limit;
-            if (books.Count == 0)
+            if (Books.Count == 0)
             { WriteLine("there is no book in this library!."); return; }
-            else if (books.Count < 4)
-                limit = books.Count;
+            else if (Books.Count < 4)
+                limit = Books.Count;
             else 
                 limit = 4;
             Random random = new Random();
@@ -106,8 +106,8 @@ namespace OOP_Progect_Library
             {
                 ForegroundColor = ConsoleColor.Black;
                 BackgroundColor = ConsoleColor.White;
-                int index = random.Next(0, books.Count);
-                WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}", books[index].Title, books[index].Author, books[index].Subject);
+                int index = random.Next(0, Books.Count);
+                WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}", Books[index].Title, Books[index].Author, Books[index].Subject);
                 ResetColor();
                 WriteLine("-----------------------------");
                 i++;
@@ -138,7 +138,7 @@ namespace OOP_Progect_Library
         // this fuction displays randome books for a given topic
         public void Books_Subject(string subject)
         {
-            List<Book> temp_Books= (from book in books where book.Subject == subject select book).ToList();
+            List<Book> temp_Books= (from book in Books where book.Subject == subject select book).ToList();
             Group_Dispaly(temp_Books);
         }
     }
