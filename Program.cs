@@ -251,9 +251,17 @@ namespace OOP_Progect_Library
             string[] Start_Menu_Option = {"Search" ,"Add", "Exit" };
             string[] Search_Menu_Option = {  "Title & Author", "Title OR Author", "Subject", "Random books?", "Back" };
             string[] Subject_Menu_Option = { "History", "Physics", "Novels", "Philosophy", "Uncategorized","Back" };
-            Menu Start_Menu = new Menu(Start_Menu_Option, "-----library-----");
             Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
             Menu Subject_Menu=new Menu(Subject_Menu_Option,"-----Subject-----");
+            Menu Start_Menu = new Menu(Start_Menu_Option, @"
+        ██╗     ██╗██████╗ ██████╗  █████╗ ██████╗ ██╗   ██╗
+        ██║     ██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
+        ██║     ██║██████╦╝██████╔╝███████║██████╔╝ ╚████╔╝
+        ██║     ██║██╔══██╗██╔══██╗██╔══██║██╔══██╗  ╚██╔╝
+        ███████╗██║██████╦╝██║  ██║██║  ██║██║  ██║   ██║
+        ╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
+=====================================================================
+(Use the arrow keys to cycle through option and press enter to select.)");
            
             Library library = new Library();
             bool Check = true;
