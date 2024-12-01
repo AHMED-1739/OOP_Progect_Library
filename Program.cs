@@ -4,14 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
-using System.Diagnostics.Eventing.Reader;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 using static System.Console;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.Win32;
-using System.Runtime.CompilerServices;
-using System.Reflection;
 namespace OOP_Progect_Library
 {
     class Book
