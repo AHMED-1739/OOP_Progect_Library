@@ -56,8 +56,6 @@ namespace OOP_Progect_Library
             List<Book> temp_Books = (from book in books  
                                      where book.Title==Title&&book.Author==Author 
                                      select book).ToList();
-            if (temp_Books.Count == 0)
-                return null;
              return temp_Books;
         }
         //We will use this method if the user doesn't know whether what they know is the title or the author's name
@@ -81,7 +79,10 @@ namespace OOP_Progect_Library
         }
         public void Information_Of_Book(Book book)
         {
-            WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}", book.Title, book.Author, book.Subject);
+            string Available_Or_Not = "this book is available";
+            if (!book.IsAvailable)
+                Available_Or_Not = "this book is not available";
+            WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}\n{3}.", book.Title, book.Author, book.Subject,Available_Or_Not);
         }   
         public void Add(Book Added_Book)
         {
@@ -204,11 +205,11 @@ namespace OOP_Progect_Library
             }
              return choois;
         }
-        static public (ConsoleKeyInfo, string )CaptureExitKey(string Title,string firstLine)
+        static public (ConsoleKeyInfo, string )CaptureExitKey(string Title)
         {
             ConsoleKeyInfo keypressed;
             string TheString = "";
-            Write(Title + "\n" + firstLine);
+            Write(Title  );
             do
             {
                 keypressed = ReadKey(true);
@@ -217,7 +218,7 @@ namespace OOP_Progect_Library
                     if (TheString.Length > 0)
                     {
                         Clear();
-                        Write(Title+"\n"+firstLine);
+                        Write(Title);
                         TheString = TheString.Remove(TheString.Length - 1);
                         Write(TheString);
                     }
@@ -243,40 +244,81 @@ namespace OOP_Progect_Library
             Menu Start_Menu = new Menu(Start_Menu_Option, "-----library-----");
             Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
             Menu Subject_Menu=new Menu(Subject_Menu_Option,"-----Subject-----");
-            ConsoleKeyInfo choois;
+           
             Library library = new Library();
             bool check = true;
             while (check)
             {
               
-                int SelectedIndex = Start_Menu.Run();
-                    //Search
-                    if (SelectedIndex == 0)
-                    {
-                    
-                    SelectedIndex = Search_Menu.Run();
+                int Start_Menu_Index = Start_Menu.Run();
+                //Search
+                if (Start_Menu_Index == 0)
+                {
+                    int Search_Menu_Index = Search_Menu.Run();
                     Clear();
                     while (true)
                     {
+                    
                         WriteLine("-----Search-----");
-                        if (SelectedIndex == 0)
+                        if (Search_Menu_Index == 0)
                         {
+                            int counter = 0;
+                            List<Book> temp_List;
                             Write("Enter the Title:");
                             try
                             {
                                 WriteLine("Enter the Title :");
-                                 string Title=ReadLine();
+                                string Title = ReadLine();
                                 WriteLine("Enter The Author:");
-                                string Author=ReadLine();   
-                                List<Book> temp_List = library.Search(Title,Author);
-                                if (temp_List == null)
-                                { Clear(); WriteLine("the book not found."); }
+                                string Author = ReadLine();
+                                temp_List = library.Search(Title, Author);
+                                if (temp_List.Count == 0)
+                                {
+                                    Clear();
+                                    WriteLine("The book not found.");
+                                }
                                 else
                                 {
                                     Clear(); WriteLine("Matching results:");
                                     foreach (Book temp in temp_List)
                                     {
+                                        if (temp.IsAvailable)
+                                            counter++;
+                                        ForegroundColor = ConsoleColor.Black;
+                                        BackgroundColor = ConsoleColor.White;
                                         library.Information_Of_Book(temp);
+                                        ResetColor();
+                                        WriteLine("============================");
+                                    }
+                                    if (counter > 0)
+                                    {
+                                        WriteLine("Do you want to borrow one of the available books?");
+                                        if (Menu.Answer_Y_N().Key == ConsoleKey.Y)
+                                        {
+                                            int i = 0;
+                                            string[] Borrow_Menu_Option = new string[counter];
+                                            foreach (Book temp in temp_List)
+                                            {
+                                                if (temp.IsAvailable)
+                                                {
+                                                    Borrow_Menu_Option[i] = $"{temp.Title} by {temp.Author}. /({temp.Subject}).";
+                                                    i++;
+                                                }
+                                            }
+                                            Menu Borrow_Menu = new Menu(Borrow_Menu_Option, "---Select the book you want to borrow---");
+
+                                            int index_Borrowed_Book = Borrow_Menu.Run();
+                                            foreach (Book temp in temp_List)
+                                            {
+                                                string trye = $"{temp.Title} by {temp.Author}. /({temp.Subject}).";
+                                                if (Borrow_Menu_Option[index_Borrowed_Book].Equals(trye))
+                                                {
+                                                    temp.IsAvailable = false;
+                                                    break;
+                                                }
+                                            }
+                                            WriteLine("The Book will reach you soon :)");
+                                        }
                                     }
                                 }
                             }
@@ -287,18 +329,19 @@ namespace OOP_Progect_Library
                                 WriteLine("Enter the Title again\n");
                                 continue;
                             }
-                            choois = Menu.Answer_Y_N();
-                            if (choois.Key == ConsoleKey.N)
+                            WriteLine("Another Search? Y/N");
+                            if (Menu.Answer_Y_N().Key == ConsoleKey.N)
                                 break;
                             else
                                 continue;
                         }
-                        else if (SelectedIndex == 1)
+
+                        else if (Search_Menu_Index == 1)
                         {
                             List<Book> temp_List_Author;
                             List<Book> temp_List_Title;
                             WriteLine("Enter the Title OR Author:");
-                           (temp_List_Author,temp_List_Title)= library.SearchByBoth(ReadLine());
+                            (temp_List_Author, temp_List_Title) = library.SearchByBoth(ReadLine());
                             if (temp_List_Author.Count != 0)
                             {
                                 WriteLine("Book that match the Author:");
@@ -317,41 +360,60 @@ namespace OOP_Progect_Library
                                     WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}", temp_List_Title[i].Title, temp_List_Title[i].Author, temp_List_Title[i].Subject);
                                 }
                             }
-                            else WriteLine("ther is no book match the title");
+                            else WriteLine("there is no book match the title");
+                            WriteLine("which book do you want to take?");
+
+
+
+
+
                             WriteLine("Another search? Y/N");
-                            choois = Menu.Answer_Y_N();
-                            if (choois.Key == ConsoleKey.N)
+                            if (Menu.Answer_Y_N().Key == ConsoleKey.N)
                                 break;
                             else
                                 continue;
                         }
-                        else if (SelectedIndex == 2)
-                        { 
-                             library.DisPlayRandomBook();
+                        else if (Search_Menu_Index == 2)
+                        {
+                            library.DisPlayRandomBook();
                             WriteLine("Another Search? Y/N");
-                            choois = Menu.Answer_Y_N();
-                            if (choois.Key == ConsoleKey.N)
+                            if (Menu.Answer_Y_N().Key == ConsoleKey.N)
                                 break;
                             else
                                 continue;
                         }
-                        else if (SelectedIndex == 4)
+                        else if (Search_Menu_Index == 3)
+                        {
+                            //this line will return the index if Selected Subject
+                            //and it is treated as an Arguments to the(Books_Subject)
+                            //which will return a list of books related to the Selected Subject.
+                            List<Book> temp_List = library.Books_Subject(Subject_Menu_Option[Subject_Menu.Run()]);
+                            if (temp_List.Count > 0)
+                                foreach (Book book in temp_List)
+                                    library.Information_Of_Book(book);
+                            WriteLine("Another Search? Y/N");
+                            if (Menu.Answer_Y_N().Key == ConsoleKey.N)
+                                break;
+                            else
+                                continue;
+                        }
+                        else if (Search_Menu_Index == 4)
                             break;
-                   
                     }
-                    }
-                    //Add
-                    if (SelectedIndex == 1)
+                }
+                //Add
+                if (Start_Menu_Index == 1)
                     {
-                        Clear();
+                    ConsoleKeyInfo choois;
+                    string title;
+                    string author;
+                    Clear();
                         while (true)
                         {
                             try
                             {
-                            string title;
-                            string author;
-
-                              (choois,title )=Menu.CaptureExitKey("ESC.\n---Add a book---","Enter the title: ");
+                             
+                              (choois,title )=Menu.CaptureExitKey("ESC.\n---Add a book---\nEnter the title: ");
 
                             if (choois.Key == ConsoleKey.Escape)
                             {
@@ -360,7 +422,7 @@ namespace OOP_Progect_Library
                                 break;
                             }
                             Clear();
-                            (choois,author )= Menu.CaptureExitKey($"ESC.\n---Add a book---\nEnter the title: {title} ", "Enter the author: ");
+                            (choois,author )= Menu.CaptureExitKey($"ESC.\n---Add a book---\nEnter the title: {title} \nEnter the author: ");
                             if (choois.Key == ConsoleKey.Escape)
                             {
                                 author = null;
@@ -370,7 +432,11 @@ namespace OOP_Progect_Library
                             WriteLine("the Subject of the book");
                           
                             Clear();
-                                library.Add(new Book(title, author, Subject_Menu_Option[Subject_Menu.Run()]));
+                            //in this line it was possible to create a variable to hold
+                            //the string value from (Subject_Menu_Option[Subject_Menu.Run()]))
+                            //and then but this variable as an Arguments ( The subject of the book)
+                            //but I did not do that because it is a redundant variable.
+                            library.Add(new Book(title, author, Subject_Menu_Option[Subject_Menu.Run()]));
                             } 
                             catch(Exception ex)
                             {
@@ -387,16 +453,12 @@ namespace OOP_Progect_Library
                       }
                     }
                     // Exit
-                    if (SelectedIndex == 2)
+                    if (Start_Menu_Index == 2)
                     {
                         check = false;
                         Clear();
                         WriteLine("Good_Bay!");
                     }              
-            
-                    
-
-
             } 
 
 }}}
