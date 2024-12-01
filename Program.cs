@@ -146,7 +146,7 @@ namespace OOP_Progect_Library
     {
         string[] Option;
         string Title;
-       public int Selected_Index;
+        public int Selected_Index;
         public Menu(string[] Option,string Title )
         {
             this.Option = Option;
@@ -187,14 +187,12 @@ namespace OOP_Progect_Library
                     if (Selected_Index == -1)
                         Selected_Index = Option.Length - 1;
                 }
-
                 else if (KeyPressed.Key == ConsoleKey.DownArrow)
                 {
                     Selected_Index++;
                     if (Selected_Index > Option.Length)
                         Selected_Index = 0;
                 }
-
             } while (KeyPressed.Key != ConsoleKey.Enter);
               Clear();
             return Selected_Index;
@@ -260,8 +258,7 @@ namespace OOP_Progect_Library
             Library library = new Library();
             bool Check = true;
             while (Check)
-            {
-              
+            {   
                 int Start_Menu_Index = Start_Menu.Run();
                 //Search
                 if (Start_Menu_Index == 0)
