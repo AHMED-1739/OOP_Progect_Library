@@ -141,6 +141,7 @@ namespace OOP_Progect_Library
             List<Book> temp_Books= (from book in Books where book.Subject == subject select book).ToList();
             Group_Dispaly(temp_Books);
         }
+
     }
     class Menu
     {
@@ -262,7 +263,7 @@ namespace OOP_Progect_Library
         ╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 =====================================================================
 (Use the arrow keys to cycle through option and press enter to select.)");
-           
+                   
             Library library = new Library();
             bool Check = true;
             while (Check)
@@ -304,7 +305,7 @@ namespace OOP_Progect_Library
                                    int  counter= library.Group_Dispaly(temp_List);
                                     if (counter > 0)
                                     {
-                                        WriteLine("Do you want to borrow one of the available books?");
+                                        WriteLine("Do you want to borrow one of the available books? (Y/N)");
                                         if (Menu.Answer_Y_N().Key == ConsoleKey.Y)
                                         {
                                             int i = 0;
@@ -341,7 +342,7 @@ namespace OOP_Progect_Library
                                 WriteLine("Enter the Title again\n");
                                 continue;
                             }
-                            WriteLine("Another Search? Y/N");
+                            WriteLine("Another Search? (Y/N)");
                             if (Menu.Answer_Y_N().Key == ConsoleKey.N)
                                 break;
                             else
@@ -388,7 +389,7 @@ namespace OOP_Progect_Library
                                         continue;
                                 }
                             }
-                            WriteLine("Do you want to borrow one of the available books?");
+                            WriteLine("Do you want to borrow one of the available books? (Y/N)");
 
                             if (Menu.Answer_Y_N().Key == ConsoleKey.Y)
                             {
@@ -425,7 +426,7 @@ namespace OOP_Progect_Library
                                 }
                                 WriteLine("The Book will reach you soon :)");
                             }
-                            WriteLine("Another search? Y/N");
+                            WriteLine("Another search? (Y/N)");
                             if (Menu.Answer_Y_N().Key == ConsoleKey.N)
                                 break;
                             else
@@ -443,7 +444,7 @@ namespace OOP_Progect_Library
                                 break;
            
                             library.Books_Subject(Subject_Menu_Option[index]);
-                            WriteLine("Another Search? Y/N");
+                            WriteLine("Another Search? (Y/N)");
                             if (Menu.Answer_Y_N().Key == ConsoleKey.N)
                                 break;
                             else
@@ -492,7 +493,10 @@ namespace OOP_Progect_Library
                             //the string value from (Subject_Menu_Option[Subject_Menu.Run()]))
                             //and then but this variable as an Arguments ( The subject of the book)
                             //but I did not do that because it is a redundant variable.
-                            library.Add(new Book(Title, Author, Subject_Menu_Option[Subject_Menu.Run()]));
+                            int index = Subject_Menu.Run();
+                            if (index == 5)
+                                break;
+                            library.Add(new Book(Title, Author, Subject_Menu_Option[index]));
                             } 
                             catch(Exception ex)
                             {
