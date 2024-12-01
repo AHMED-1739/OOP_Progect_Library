@@ -135,7 +135,7 @@ namespace OOP_Progect_Library
                 Available_Or_Not = "this book is not available";
             WriteLine("Title: {0}\nAuthor: {1}\nSubject: {2}\n{3}.", book.Title, book.Author, book.Subject,Available_Or_Not);
         }   
-        // this fuction displays randome books for a given topic
+        // this fuction displays books for a given topic
         public void Books_Subject(string subject)
         {
             List<Book> temp_Books= (from book in Books where book.Subject == subject select book).ToList();
@@ -252,7 +252,7 @@ namespace OOP_Progect_Library
         {
             string[] Start_Menu_Option = {"Search" ,"Add", "Exit" };
             string[] Search_Menu_Option = {  "Title & Author", "Title OR Author", "Subject", "Random books?", "Back" };
-            string[] Subject_Menu_Option = { "History", "Physics", "Novels", "Philosophy", "Uncategorized" };
+            string[] Subject_Menu_Option = { "History", "Physics", "Novels", "Philosophy", "Uncategorized","Back" };
             Menu Start_Menu = new Menu(Start_Menu_Option, "-----library-----");
             Menu Search_Menu = new Menu(Search_Menu_Option, "----Search----");
             Menu Subject_Menu=new Menu(Subject_Menu_Option,"-----Subject-----");
@@ -270,18 +270,23 @@ namespace OOP_Progect_Library
                     Clear();
                     while (true)
                     {
-                        WriteLine("-----Search-----");
                         //Title & Author.
                         if (Search_Menu_Index == 0)
-                        { 
+                        {
+                            string Title, Author;
                             List<Book> temp_List;
-                            Write("Enter the Title:");
+                            ConsoleKeyInfo User_Choois;
                             try
                             {
-                                WriteLine("Enter the Title :");
-                                string Title = ReadLine();
-                                WriteLine("Enter The Author:");
-                                string Author = ReadLine();
+                                (User_Choois, Title) = Menu.CaptureExitKey("ESC\n-----Search-----\nEnter the Title: ");
+                                if (User_Choois.Key == ConsoleKey.Escape)
+                                    break;
+
+                                Clear();
+                                (User_Choois, Author) = Menu.CaptureExitKey($"ESC\n-----Search-----\nEnter the Title: {Title}\nEnter the Authro: ");
+                                if (User_Choois.Key == ConsoleKey.Escape)
+                                    break;
+
                                 temp_List = library.Search(Title, Author);
                                 if (temp_List.Count == 0)
                                 {
@@ -343,10 +348,14 @@ namespace OOP_Progect_Library
                             int counter=0;
                             List<Book> temp_List_Author;
                             List<Book> temp_List_Title;
+                            ConsoleKeyInfo User_Choois;
+                            string TitleOrAuthor;
 
-                            WriteLine("Enter the Title OR Author:");
+                            (User_Choois, TitleOrAuthor) = Menu.CaptureExitKey("ESC.\n-----Search-----\nEnter the Title OR Author:");
+                            if (User_Choois.Key == ConsoleKey.Escape)
+                                break;
 
-                            (temp_List_Author, temp_List_Title) = library.SearchByBoth(ReadLine());
+                            (temp_List_Author, temp_List_Title) = library.SearchByBoth(TitleOrAuthor);
 
                             if (temp_List_Author.Count != 0)
                             {
@@ -423,7 +432,12 @@ namespace OOP_Progect_Library
                             //this line will return the index if Selected Subject
                             //and it is treated as an Arguments to the(Books_Subject)
                             //which will return a list of books related to the Selected Subject.
-                            library.Books_Subject(Subject_Menu_Option[Subject_Menu.Run()]);
+                            int index = Subject_Menu.Run();
+                            //if Back
+                            if (index == 5)
+                                break;
+           
+                            library.Books_Subject(Subject_Menu_Option[index]);
                             WriteLine("Another Search? Y/N");
                             if (Menu.Answer_Y_N().Key == ConsoleKey.N)
                                 break;
